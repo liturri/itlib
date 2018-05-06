@@ -18,25 +18,26 @@ OBJS := $(foreach O,$(OBJS),$(BIN)/$(O))
 
 INSTALL_PATH=/usr/local/
 
-SHRLIB=$(BIN)/libitlib.so
-SHRLIBVERSION=$(SHRLIB).1
+SHRLIBNAME=libitlib.so
+SHRLIBPATH=$(BIN)/$(SHRLIBNAME)
+SHRLIBVERSION=$(BIN)/$(SHRLIBNAME).1
 
-all:  $(SHRLIB) $(BIN)/pru $(BIN)/pru01 # gdbm_api # str2
+all:  $(SHRLIBPATH) $(BIN)/pru $(BIN)/pru01 # gdbm_api # str2
 
 install:
 	mkdir -p $(INSTALL_PATH)/lib $(INSTALL_PATH)/include
-	cp -a $(SHRLIBVERSION) $(INSTALL_PATH)/lib
+	cp -a $(SHRLIBVERSION) $(INSTALL_PATH)/lib/
 	cp *.hxx $(INSTALL_PATH)/include
 
-$(SHRLIB): $(OBJS)
-	$(CXX) $(CXXFLAGS) -lpq -shared -Wl,-soname,$(SHRLIB) -lc -o $(SHRLIBVERSION) $^ -l gdbm
-	ln -fs $(SHRLIBVERSION) $(SHRLIB)
+$(SHRLIBPATH): $(OBJS)
+	$(CXX) $(CXXFLAGS) -lpq -shared -Wl,-soname,$(SHRLIBNAME) -lc -o $(SHRLIBVERSION) $^ -l gdbm
+	ln -fs $(SHRLIBVERSION) $(SHRLIBPATH)
 
 $(BIN)/%.o:  $(SOURCE)/%.cc
 	$(COMPILE.cc) $(OUTPUT_OPTION) $<
 
 clean:
-	rm -f $(OBJS) $(SHRLIBVERSION) $(SHRLIB) .deps
+	rm -f $(OBJS) $(SHRLIBVERSION) $(SHRLIBPATH) .deps
 
 .deps: $(SRCS)
 	for S in $(SRCS);do gcc -M -MM -MT $(BIN)/$${S/.cc/.o} $$S;done > .deps
