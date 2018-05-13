@@ -9,6 +9,7 @@ CXX=g++
 #CXX=clang++
 CXXFLAGS=-Wall -g -fPIC -std=c++14
 LDFLAGS:=-L$(BIN) -litlib
+
 # C++ link
 LINK.o = $(LINK.cc)
 
