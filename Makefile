@@ -11,7 +11,7 @@ CXXFLAGS=-Wall -g -fPIC -std=c++14
 LDFLAGS:=-L$(BIN) -litlib
 
 # C++ link
-LINK.o = $(LINK.cc)
+#LINK.o = $(LINK.cc)
 
 SRC := pru01.cc pru.cc
 OBJ := $(SRC:cc=o)
