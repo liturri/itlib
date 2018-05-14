@@ -42,6 +42,9 @@ $(SHRLIBPATH): $(LIB_OBJ)
 $(BIN)/%.o:  $(SOURCE)/%.cc
 	$(COMPILE.cc) $(OUTPUT_OPTION) $<
 
+$(BIN)/%:  $(BIN)/%.o
+	$(LINK.cc) $(OUTPUT_OPTION) $<
+
 clean:
 	rm -f $(ALL_OBJ) $(SHRLIBVERSION) $(SHRLIBPATH) .deps
 
