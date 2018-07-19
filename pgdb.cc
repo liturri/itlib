@@ -43,7 +43,7 @@ namespace pgdb
    trans::trans(const db &conn)
       : conn(conn), transOpen(false)
    {
-      std::cerr << "Init trans: " << conn.conn.get() << "\n";
+      // std::cerr << "Init trans: " << conn.conn.get() << "\n";
       auto res= query("BEGIN");
       transOpen=true;
    }
@@ -62,7 +62,7 @@ namespace pgdb
 
    result trans::query(const std::string &q)
    {
-      std::cerr << "Q: " << q << "\n";
+      // std::cerr << "Q: " << q << "\n";
       auto res= result(PQexec(this->conn.getConn(), q.c_str()));
       auto status= res.status();
       if(status == PGRES_BAD_RESPONSE || status == PGRES_FATAL_ERROR) {
@@ -75,7 +75,7 @@ namespace pgdb
 
    void trans::endCopy()
    {
-      std::cerr << "endCopy\n";
+      // std::cerr << "endCopy\n";
 
       if (PQputCopyEnd(conn.getConn(), nullptr) != 1)
       {
@@ -97,7 +97,7 @@ namespace pgdb
 
    trans::~trans()
    {
-      std::cerr << "Done trans: " << conn.conn.get() << "\n";
+      // std::cerr << "Done trans: " << conn.conn.get() << "\n";
       if (transOpen)
          rollback();
    }

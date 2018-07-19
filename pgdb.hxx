@@ -50,7 +50,7 @@ namespace pgdb
       result query(const std::string &q);
       void rollback();
       void commit();
-
+   
 
    protected:
       db conn;
@@ -89,7 +89,9 @@ namespace pgdb
       trans *tr;
       std::string table;
       std::string columns;
-
+      bool doneCopy=false;
+      
+   
    public:
       copy(trans &trans, const std::string &tbl, ARGS... args) : tr{&trans}, table{tbl} {
          addCol(args...);
@@ -101,32 +103,65 @@ namespace pgdb
          // std::cerr << cmd << '\n';
          tr->query(cmd);
       };
-      // ~copy() {
-      //    tr.endCopy();
-      // };
+
+      ~copy() {
+         if (!doneCopy)
+            tr->endCopy();
+      };
       std::string getColumns() const { return columns; }
       std::string getCopyBuffer() const { return copyBuffer; }
-      void addRow(ARGS... args) {
+      template <typename... ARGS2>
+      void addRow(ARGS2... args) {
+         if (sizeof...(ARGS) != sizeof...(ARGS2)) {
+            
+         }
          copyBuffer.clear();
          addRowTmpl(args...);
          tr->putCopyData(copyBuffer);
-         std::cerr << copyBuffer;
+         // std::cerr << copyBuffer;
       };
-
+      
       void end() {
          //std::cerr << "\\.\n";
          tr->endCopy();
+         doneCopy=true;
       };
-
+  
    private:
-      void addRowTmpl(const std::string &row) {
-         copyBuffer.append(row);
+      void addRowTmpl() {
+         //copyBuffer.append(row);
          copyBuffer.append("\n");
       };
+      
+      template<typename... ROWS>
+      void addRowTmpl(const char *row, ROWS... rows) {
+         copyBuffer.append(row);
+         if (sizeof...(rows) > 0)
+            copyBuffer.append("\t");
+         addRowTmpl(rows...);            
+      }
+      
+      template<typename... ROWS>
+      void addRowTmpl(char *const row, ROWS... rows) {
+         copyBuffer.append(row);
+         if (sizeof...(rows) > 0)
+            copyBuffer.append("\t");
+         addRowTmpl(rows...);            
+      }
+      
       template<typename... ROWS>
       void addRowTmpl(const std::string &row, ROWS... rows) {
          copyBuffer.append(row);
-         copyBuffer.append("\t");
+         if (sizeof...(rows) > 0)
+            copyBuffer.append("\t");
+         addRowTmpl(rows...);            
+      }
+      
+      template<typename T, typename... ROWS>
+      void addRowTmpl(const T &row, ROWS... rows) {
+         copyBuffer.append(std::to_string(row));
+         if (sizeof...(rows) > 0) 
+            copyBuffer.append("\t");
          addRowTmpl(rows...);
       }
 
@@ -143,13 +178,13 @@ namespace pgdb
       std::string copyBuffer;
    };
 
-
+   
    template<typename... ARGS>
    copy<ARGS...>make_copy(trans &trans, const std::string &tbl, ARGS... args)
    {
       return copy<ARGS...>(trans, tbl, args...);
    }
-
+   
    class colIter
    {
    public:
