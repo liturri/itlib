@@ -35,6 +35,16 @@ namespace pgdb
       return PQerrorMessage(conn.get());
    }
 
+   std::string db::escapeString(const std::string str)
+   {
+      std::string strBuff;
+      char *buff;
+      buff=PQescapeLiteral(conn.get(), str.c_str(), 100000);
+      strBuff += buff;
+      PQfreemem(buff);
+      return strBuff;
+   }
+
    trans db::Begin()
    {
       return trans(*this);
@@ -119,12 +129,12 @@ namespace pgdb
       // std::cerr << "Done result: " << res << "\n";
    }
 
-   const int result::getRowCount() const
+   int result::getRowCount() const
    {
       return PQntuples(res.get());
    }
 
-   const int result::getColCount() const
+   int result::getColCount() const
    {
       return PQnfields(res.get());
    }

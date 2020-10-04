@@ -23,12 +23,15 @@ namespace pgdb
       db();
       db(const std::string &connString);
       db(const db &dbConn);
+      void Close();
       trans Begin();
 
-      // ~db() =default;
+      ~db() =default;
       std::string getError();
-
-   protected:
+      std::string escapeString(const std::string str);
+      std::string escapeString(const int val) {return std::to_string(val);};
+      std::string escapeString(const double val) {return std::to_string(val);};
+      protected:
       PGconn *getConn() {
          return conn.get();
       };
@@ -73,8 +76,8 @@ namespace pgdb
       ExecStatusType status() {
          return PQresultStatus(res.get());
       };
-      const int getRowCount() const;
-      const int getColCount() const;
+      int getRowCount() const;
+      int getColCount() const;
       const std::string getValue(int row, int col) const;
       const std::vector<std::string> getRow(int row) const;
 
@@ -112,9 +115,9 @@ namespace pgdb
       std::string getCopyBuffer() const { return copyBuffer; }
       template <typename... ARGS2>
       void addRow(ARGS2... args) {
-         if (sizeof...(ARGS) != sizeof...(ARGS2)) {
-            
-         }
+         // if (sizeof...(ARGS) != sizeof...(ARGS2)) {
+         static_assert(sizeof...(ARGS) == sizeof...(ARGS2));
+         // }
          copyBuffer.clear();
          addRowTmpl(args...);
          tr->putCopyData(copyBuffer);
@@ -196,6 +199,9 @@ namespace pgdb
          return res.getValue(row, col);
       }
 
+      std::string operator[](int pos) const {
+         return res.getValue(row, pos);
+      }
       colIter &operator++() {
          col++;
          return *this;
@@ -224,6 +230,7 @@ namespace pgdb
       rowIter(const result &r, const int row= 0)
          : row(row)
          , res(r) {};
+
       colIter operator*() const {
          return colIter(res, row, 0);
       }
