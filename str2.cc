@@ -81,6 +81,23 @@ std::string trimmed(std::string s)
    return s;
 }
 
+// Return if string ends with second string
+bool ends_with(std::string const &s, std::string const &ends) {
+   if ( s.length() >= ends.length()) {
+      return (0 == s.compare (s.length() - ends.length(), ends.length(), ends));
+   } else {
+      return false;
+   };
+}
+
+bool starts_with(std::string const &s, std::string const &starts) {
+   if ( s.length() >= starts.length()) {
+      return (0 == s.compare (0, starts.length(), starts));
+   } else {
+      return false;
+   };
+}
+
 #ifdef EXEC_STR2
 int main()
 {
