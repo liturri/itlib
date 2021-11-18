@@ -1,32 +1,41 @@
 #ifndef __DATES_H
 #define __DATES_H
 
-#include <time.h>
-#include <string>
+#include <ctime>
 #include <iostream>
+#include <string>
 
-using std::string;
-
-class date
+// using std::string;
+namespace itlib
 {
-public:
-   date();
-   date(string Date);
-   string GetFDate();
-   string GetSQLDate();
-   string GetSQLDateTime();
+   class date
+   {
+   public:
+      date();
+      date(std::string Date);
+      date(const time_t &Time) : Time(Time){};
 
-   void   SetDay(int Value);
-   void   SetYear(int Value);
-   void   SetMonth(int Value);
-   void   SetHour(int Value);
-   void   SetMin(int Value);
-   void   SetSec(int Value);
+      std::string GetFDate();
+      std::string GetSQLDate();
+      std::string GetSQLDateTime();
 
-private:
-   time_t Time;
+      void SetDay(int Value);
+      void SetYear(int Value);
+      void SetMonth(int Value);
+      void SetHour(int Value);
+      void SetMin(int Value);
+      void SetSec(int Value);
+
+      bool operator<(const date &d) { return this->Time < d.Time; };
+      bool operator>(const date &d) { return this->Time > d.Time; };
+      bool operator<=(const date &d) { return this->Time <= d.Time; };
+      bool operator>=(const date &d) { return this->Time >= d.Time; };
+      bool operator==(const date &d) { return this->Time == d.Time; };
+
+   private:
+      time_t Time;
+   };
+
+   std::ostream &operator<<(std::ostream &, date &);
 };
-
-std::ostream& operator<< (std::ostream &, date &);
-
 #endif
