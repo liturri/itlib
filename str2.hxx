@@ -1,11 +1,14 @@
-#ifndef STR2_HXX
-#define STR2_HXX
+#ifndef __STR2_HXX__
+#define __STR2_HXX__
 
 #include <sstream>
 #include <string>
 #include <vector>
 
+// split string into vector<strings> by splitChars
 std::vector<std::string> strSplit(const std::string &buff, const std::string &splitChars = " ");
+
+// trim from start (in place)
 void ltrim(std::string &s);
 
 // trim from end (in place)
@@ -34,14 +37,12 @@ template <typename... Args>
 std::string strprintf(const char *format, Args... args)
 {
    int length = std::snprintf(nullptr, 0, format, args...);
-   // assert( length >= 0 );
 
    char *buf = new char[length + 1];
    std::snprintf(buf, length + 1, format, args...);
 
    std::string str(buf);
    delete[] buf;
-   // return std::move(str);
    return str;
 }
 
@@ -55,4 +56,5 @@ std::string join_args(Value v, Values... vs)
    (void)expander{0, (oss << "," << vs, void(), 0)...};
    return oss.str();
 }
-#endif
+
+#endif // __STR2_HXX__
