@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION "3.21")
 
-
 set(CMAKE_INSTALL_DATADIR "/usr/local/")
 project ("itlib")
 
@@ -16,7 +15,7 @@ set_target_properties(itlib PROPERTIES PUBLIC_HEADER "${HEADERS}")
 target_link_libraries(itlib pqxx gdbm)
 
 install(TARGETS itlib PUBLIC_HEADER DESTINATION "/usr/local/include/")
-add_subdirectory(test)
+# add_subdirectory(test)
 
 
 install(TARGETS
