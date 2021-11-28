@@ -10,7 +10,7 @@ file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.hxx")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-add_library(itlib SHARED ${SRCS})
+add_library(itlib ${SRCS})
 set_target_properties(itlib PROPERTIES PUBLIC_HEADER "${HEADERS}")
 target_link_libraries(itlib pqxx gdbm)
 
