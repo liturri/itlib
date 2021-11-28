@@ -13,6 +13,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(itlib ${SRCS})
 set_target_properties(itlib PROPERTIES PUBLIC_HEADER "${HEADERS}")
 target_link_libraries(itlib pqxx gdbm)
+target_include_directories(itlib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
 install(TARGETS itlib PUBLIC_HEADER DESTINATION "/usr/local/include/")
 # add_subdirectory(test)
