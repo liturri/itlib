@@ -7,17 +7,15 @@ project ("itlib")
 
 file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cc")
 file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.hxx")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 add_library(itlib ${SRCS})
+target_include_directories(itlib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 set_target_properties(itlib PROPERTIES PUBLIC_HEADER "${HEADERS}")
 target_link_libraries(itlib pqxx gdbm)
-target_include_directories(itlib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
 install(TARGETS itlib PUBLIC_HEADER DESTINATION "/usr/local/include/")
-# add_subdirectory(test)
-
 
 install(TARGETS
       itlib
