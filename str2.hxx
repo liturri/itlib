@@ -57,4 +57,18 @@ std::string join_args(Value v, Values... vs)
    return oss.str();
 }
 
+template <typename InputIt>
+std::string IterJoin(InputIt first, InputIt last, const std::string &separator = ",")
+{
+   std::ostringstream result;
+   if (first != last)
+   {
+      result << *first;
+      while (++first != last)
+      {
+         result << separator << *first;
+      }
+   }
+   return result.str();
+}
 #endif // __STR2_HXX__
