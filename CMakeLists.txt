@@ -5,8 +5,14 @@ project ("itlib")
 
 # add_subdirectory("libs")
 
-file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cc")
-file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.hxx")
+find_package(PostgreSQL)
+
+set(SRCS dates.cc gdbm_api.cc str2.cc system.cc)
+if (${PostgreSQL_FOUND})
+    set(SRCS ${SRC} pgdb.cc)
+endif()
+# file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cc")
+# file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.hxx")
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
