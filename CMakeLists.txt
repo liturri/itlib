@@ -5,6 +5,11 @@ project ("itlib")
 
 # add_subdirectory("libs")
 
+set(MAIN_PROJECT OFF)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(MAIN_PROJECT ON)
+endif()
+
 find_package(PostgreSQL)
 
 set(SRCS dates.cc gdbm_api.cc str2.cc system.cc)
@@ -26,6 +31,7 @@ target_include_directories(itlib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE
 set_target_properties(itlib PROPERTIES PUBLIC_HEADER "${HEADERS}")
 target_link_libraries(itlib ${LIBS})
 
+if (MAIN_PROJECT STREQUAL "ON")
 install(TARGETS itlib PUBLIC_HEADER DESTINATION "/usr/local/include/")
 
 install(TARGETS
@@ -45,3 +51,4 @@ install(EXPORT
     DESTINATION "${CMAKE_INSTALL_DATADIR}/itlib/cmake"
     NAMESPACE itlib::
 )
+endif()
